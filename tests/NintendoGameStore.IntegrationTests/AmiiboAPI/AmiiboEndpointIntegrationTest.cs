@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NintendoGameStore.Infrastructure.AmiiboAPI.Endpoints;
 using NintendoGameStore.Infrastructure.AmiiboAPI.Interfaces;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
@@ -29,7 +30,7 @@ namespace NintendoGameStore.IntegrationTests.AmiiboAPI
             var result = await _amiiboEndpoint.GetAmiibosAsync();
 
             Assert.NotNull(result.Amiibo);
-            Assert.True(result.Amiibo.Count > 1);
+            Assert.True(result.Amiibo.Any());
         }
 
         [Fact]

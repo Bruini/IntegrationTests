@@ -36,11 +36,11 @@ namespace NintendoGameStore.API.Controllers
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> Get(Guid id)
+        [Route("{id}")]
+        public async Task<ActionResult<Category>> GetById(Guid id)
         {
             var category = await _categoryService.GetByIdAsync(id);
-            if(category != null)
+            if (category != null)
             {
                 return category;
             }

@@ -73,7 +73,7 @@ namespace NintendoGameStore.UnitTests.Controllers
             this._mockCategoryService.Setup(x => x.GetByIdAsync(id)).ReturnsAsync(category);
 
             var categoryController = this.CreateCategoryController();
-            var result = await categoryController.Get(id);
+            var result = await categoryController.GetById(id);
 
             var actionResult = Assert.IsType<ActionResult<Category>>(result);
             var returnValue = Assert.IsType<Category>(actionResult.Value);
@@ -87,7 +87,7 @@ namespace NintendoGameStore.UnitTests.Controllers
             var categoryController = this.CreateCategoryController();
             var id = Guid.NewGuid();
 
-            var result = await categoryController.Get(id);
+            var result = await categoryController.GetById(id);
 
             var actionResult = Assert.IsType<ActionResult<Category>>(result);
             Assert.IsType<NotFoundResult>(actionResult.Result);
@@ -117,6 +117,7 @@ namespace NintendoGameStore.UnitTests.Controllers
             var returnValue = Assert.IsType<Category>(createdAtActionResult.Value);
             
             Assert.Equal(input.Name, returnValue.Name);
+            Assert.NotEqual(Guid.Empty, returnValue.Id);
             this._mockCategoryService.Verify(x => x.InsertOrUpdateAsync(input), Times.Once);
         }
 
