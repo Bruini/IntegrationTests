@@ -160,6 +160,45 @@ namespace NintendoGameStore.IntegrationTests.Repositories
                 Assert.Null(gameFromDbDeleted);
             }
         }
+
+        [Fact]
+        public async Task Update_Should_Update_Game()
+        {
+            using (var context = _efRepoTestFixture.CreateContext())
+            {
+                var gameRepository = new GameRepository(context);
+
+                var uuid = Guid.NewGuid();
+                var game = new Game()
+                {
+                    Id = uuid,
+                    Name = "Fifa 21",
+                    Description = "Fifa is a video game developed by EA",
+                    NumberOfPlayers = 2,
+                    Price = 59,
+                    ReleaseDate = new DateTime(1921, 01, 15)
+                };
+
+                await gameRepository.AddAsync(game);
+                await context.SaveChangesAsync();
+
+                game.Name = "Fifa 22";
+                game.Description = "N/A";
+                game.NumberOfPlayers = 4;
+
+                var gameUpdated = gameRepository.Update(game);
+
+                Assert.NotNull(gameUpdated);
+                Assert.Equal(uuid, gameUpdated.Id);
+                Assert.Equal("Fifa 22", gameUpdated.Name);
+                Assert.Equal("N/A", gameUpdated.Description);
+                Assert.Equal(4, gameUpdated.NumberOfPlayers);
+                Assert.Equal(game.Price, gameUpdated.Price);
+                Assert.Equal(game.ReleaseDate, gameUpdated.ReleaseDate);
+
+                await ClearData(gameRepository, gameUpdated);
+            }
+        }
         private async Task ClearData(GameRepository gameRepository, Game game)
         {
             gameRepository.Delete(game);
